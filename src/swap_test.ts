@@ -102,6 +102,8 @@ async function main() {
   console.log(orderCreation)
   
   const orderId = await orderBookApi.sendOrder(orderCreation);
+  const order = await orderBookApi.getOrder(orderId)
+  console.log(order)
 }
 
 main().catch(console.error);
