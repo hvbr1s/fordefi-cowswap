@@ -34,29 +34,34 @@ const quoteRequest: OrderQuoteRequest = {
   signingScheme: SigningScheme.EIP712
 }
 
+// Init CowSwap orderbook
 const orderBookApi = new OrderBookApi({ chainId: SupportedChainId.MAINNET })
 
 async function main() {
-  // Request quote
+
+  // Request quote from CowSwap
   const { quote } = await orderBookApi.getQuote(quoteRequest)
   console.log(quote)
   
-  const signer = provider.getSigner();
-  const unsignedOrder = {
+  const unsignedQuote = {
     ...quote,
     receiver: quote.receiver || config.address, 
   };
   
-  const orderSigningResult = await OrderSigningUtils.signOrder(unsignedOrder, SupportedChainId.MAINNET, signer);
-  console.log(orderSigningResult)
-  
+  // Sign quote with Fordefi
+  const signer = provider.getSigner();
+  const signedQuote = await OrderSigningUtils.signOrder(unsignedQuote, SupportedChainId.MAINNET, signer);
+  console.log(signedQuote)
+
+  // Created swap order
   const orderCreation = {
     ...quote,
-    signature: orderSigningResult.signature,
-    signingScheme: orderSigningResult.signingScheme as unknown as SigningScheme,
+    signature: signedQuote.signature,
+    signingScheme: signedQuote.signingScheme as unknown as SigningScheme,
   };
   console.log(orderCreation)
-  
+
+  // Send order to CowSwap for execution
   const orderId = await orderBookApi.sendOrder(orderCreation);
   const order = await orderBookApi.getOrder(orderId)
   console.log(order)
