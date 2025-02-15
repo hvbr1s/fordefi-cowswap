@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "go": "npx ts-node src/swap.ts",
-    "test": "npx ts-node src/swap_test.ts"
+    "swap": "npx ts-node src/swap.ts"
   },
   "keywords": [],
   "author": "",
