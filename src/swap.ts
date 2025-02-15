@@ -47,7 +47,7 @@ async function main() {
     receiver: quote.receiver || config.address, 
   };
   
-  const orderSigningResult = await OrderSigningUtils.signOrder(unsignedOrder, 1, signer);
+  const orderSigningResult = await OrderSigningUtils.signOrder(unsignedOrder, SupportedChainId.MAINNET, signer);
   console.log(orderSigningResult)
   
   const orderCreation = {
